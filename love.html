@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>57 причин любить тебя</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: radial-gradient(circle at center, #150b15, #08020a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            touch-action: manipulation;
+            overflow-x: hidden;
+            padding: 10px;
+            margin: 0;
+            position: relative;
+        }
+        /* Контейнер для всего (увеличен) */
+        .universe {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            aspect-ratio: 1 / 1.2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* === ЦЕНТРАЛЬНОЕ СЕРДЦЕ (в 2 раза больше!) === */
+        .heart-3d {
+            font-size: 200px;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            animation: float 3s ease-in-out infinite, pulseGlow 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 60px rgba(255, 30, 70, 0.8));
+            text-shadow: 0 0 50px #ff0040;
+            line-height: 1;
+            transition: transform 0.2s;
+            user-select: none;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        /* На маленьких экранах сердце чуть меньше, но всё равно огромное */
+        @media (max-width: 500px) {
+            .heart-3d { font-size: 150px; }
+        }
+        @media (max-width: 400px) {
+            .heart-3d { font-size: 120px; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(-3deg) scale(1); }
+            50% { transform: translateY(-15px) rotate(3deg) scale(1.05); }
+            100% { transform: translateY(0px) rotate(-3deg) scale(1); }
+        }
+        @keyframes pulseGlow {
+            0% { filter: drop-shadow(0 0 40px rgba(255, 30, 70, 0.5)); }
+            50% { filter: drop-shadow(0 0 90px rgba(255, 30, 70, 0.95)); }
+            100% { filter: drop-shadow(0 0 40px rgba(255, 30, 70, 0.5)); }
+        }
+
+        /* === КОНТЕЙНЕР ДЛЯ ЛУЧЕЙ === */
+        .rays-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .ray-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        /* Линия луча (стала ярче) */
+        .ray-line {
+            position: absolute;
+            background: linear-gradient(90deg, rgba(255, 80, 130, 0.15), rgba(255, 180, 200, 0.5));
+            height: 2px;
+            border-radius: 2px;
+            transform-origin: left center;
+            box-shadow: 0 0 20px rgba(255, 80, 130, 0.2);
+            pointer-events: none;
+            top: 50%;
+            left: 50%;
+            width: 45%;
+        }
+        /* Кнопка причины (чуть меньше, чтобы влезло 57 штук) */
+        .ray-btn {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1.5px solid rgba(255, 180, 200, 0.4);
+            color: #ffeef2;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 20px rgba(255, 0, 80, 0.1);
+            font-family: 'Georgia', serif;
+            transform: translate(-50%, -50%);
+            touch-action: manipulation;
+            user-select: none;
+            z-index: 20;
+        }
+        .ray-btn:active {
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #ff8caa;
+            box-shadow: 0 0 40px #ff3b6f;
+        }
+        @media (max-width: 500px) {
+            .ray-btn { width: 30px; height: 30px; font-size: 11px; }
+        }
+        @media (max-width: 400px) {
+            .ray-btn { width: 26px; height: 26px; font-size: 9px; }
+        }
+
+        /* === ПОПАП С ПРИЧИНОЙ === */
+        .reason-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 88%;
+            max-width: 360px;
+            background: rgba(18, 5, 15, 0.94);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 150, 200, 0.3);
+            border-radius: 40px;
+            padding: 35px 25px;
+            color: #fff;
+            z-index: 100;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(255, 0, 60, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            pointer-events: auto;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            opacity: 0;
+        }
+        .reason-popup.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        .reason-popup h2 {
+            font-size: 15px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #ff8caa;
+            margin-bottom: 12px;
+            font-weight: 300;
+        }
+        .reason-popup .num {
+            font-size: 13px;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        .reason-popup p {
+            font-size: 22px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+            font-style: italic;
+            color: #f5e6ed;
+            font-weight: 300;
+        }
+        .reason-popup .close-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #ffb6c9;
+            padding: 8px 30px;
+            border-radius: 40px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Georgia', serif;
+            letter-spacing: 1px;
+        }
+        .reason-popup .close-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Искры */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 999;
+            background: radial-gradient(circle, #ffb6c1, #ff3b6f);
+            box-shadow: 0 0 20px #ff3b6f;
+        }
+
+        /* === КНОПКА ВКЛЮЧЕНИЯ МУЗЫКИ (маленькая и стильная) === */
+        .music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            color: #ffb6c9;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 200;
+            transition: 0.3s;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        .music-toggle:active {
+            transform: scale(0.85);
+            background: rgba(255,255,255,0.15);
+        }
+        .music-toggle.playing {
+            color: #ff6b8a;
+            box-shadow: 0 0 30px rgba(255, 50, 80, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Кнопка управления музыкой (всегда висит справа внизу) -->
+<div class="music-toggle" id="musicToggle">🔇</div>
+
+<div class="universe" id="app">
+
+    <!-- Центральное сердце -->
+    <div class="heart-3d" id="mainHeart">❤️</div>
+
+    <!-- Контейнер для лучей -->
+    <div class="rays-container" id="raysContainer"></div>
+
+    <!-- Попап с причиной -->
+    <div class="reason-popup" id="reasonPopup">
+        <h2>Причина №<span id="reasonNum">1</span></h2>
+        <p id="popupText">Ты — мой свет</p>
+        <button class="close-btn" id="closePopup">💫 Понял</button>
+    </div>
+
+</div>
+
+<script>
+    // ============================================================
+    // 1. 57 ПРИЧИН (ЗАМЕНИ НА СВОИ!!!)
+    // ============================================================
+    const reasons = [
+        "Твоя улыбка согревает меня даже в самые холодные дни.",
+        "Ты умеешь слушать и слышать меня, как никто другой.",
+        "Каждое утро рядом с тобой — это маленькое чудо.",
+        "Твой смех — моя любимая музыка.",
+        "Ты делаешь меня лучше, добрее и сильнее.",
+        "Твои глаза — это океан, в котором я хочу тонуть вечно.",
+        "Ты всегда знаешь, что мне нужно, даже без слов.",
+        "С тобой я чувствую себя дома в любой точке мира.",
+        "Ты — самая красивая женщина на планете.",
+        "Твой голос успокаивает мою душу.",
+        "Ты веришь в меня, даже когда я сомневаюсь в себе.",
+        "Твои объятия — лучшее лекарство от всех проблем.",
+        "Ты — моя муза, мое вдохновение.",
+        "Я люблю, как ты морщишь нос, когда смеешься.",
+        "Ты — единственная, с кем я хочу стареть.",
+        "Твой запах сводит меня с ума.",
+        "Ты умеешь превращать обычный день в праздник.",
+        "Я люблю твою страсть к жизни.",
+        "Ты — моя опора и защита.",
+        "Ты удивительно талантлива во всем, за что берешься.",
+        "Твоя доброта исцеляет сердца.",
+        "Я люблю, как ты заботишься о нас.",
+        "Ты делаешь наш дом уютным и теплым.",
+        "Твой вкус безупречен, и я обожаю это.",
+        "Ты — единственная, кто понимает мой странный юмор.",
+        "Я люблю твою силу и нежность одновременно.",
+        "Ты — мое солнце, моя луна и все звезды.",
+        "Твои поцелуи — это магия.",
+        "Ты вдохновляешь меня на великие дела.",
+        "Я люблю, как ты смотришь на меня с любовью.",
+        "Ты — моя самая лучшая подруга.",
+        "Твоя уверенность в себе завораживает.",
+        "Ты — причина моей улыбки каждый день.",
+        "Я люблю твою щедрость и открытость.",
+        "Ты умеешь прощать и понимать.",
+        "Твоя энергия заряжает меня на 100%.",
+        "Ты — мое счастье, моя радость.",
+        "Я люблю, как ты пахнешь после душа.",
+        "Ты — моя любимая глава в этой жизни.",
+        "Твой ум и остроумие сводят меня с ума.",
+        "Ты умеешь быть серьезной, но я люблю тебя и в шалостях.",
+        "Ты — моя путеводная звезда.",
+        "Я люблю твои руки, они такие нежные.",
+        "Ты — лучший человек из всех, кого я знаю.",
+        "С тобой я чувствую себя героем.",
+        "Ты принимаешь меня таким, какой я есть.",
+        "Твоя любовь — самый ценный дар в моей жизни.",
+        "Я люблю, как ты строишь планы на будущее.",
+        "Ты — моя самая большая слабость и сила.",
+        "Твой смех звенит в моем сердце.",
+        "Ты умеешь находить красоту в простых вещах.",
+        "Я люблю твою страстность и огонь в глазах.",
+        "Ты — моя вечная весна.",
+        "Твоя душа чиста и прекрасна.",
+        "Ты делаешь мир вокруг себя лучше.",
+        "Я готов повторять это каждый день — я люблю тебя.",
+        "Ты — моя любимая, моя жизнь, мое всё."
+    ];
+
+    // ============================================================
+    // 2. ГЕНЕРАЦИЯ ЛУЧЕЙ (ТРИ КОЛЬЦА ДЛЯ 57 ШТУК)
+    // ============================================================
+    const container = document.getElementById('raysContainer');
+    const count = reasons.length; // 57
+
+    // Настройки колец: [радиус в %, количество на кольцо, стартовый индекс]
+    const rings = [
+        { radius: 28, count: 12, start: 0 },   // ближнее кольцо (1-12)
+        { radius: 40, count: 22, start: 12 },  // среднее (13-34)
+        { radius: 52, count: 23, start: 34 }   // дальнее (35-57)
+    ];
+
+    let globalIndex = 0;
+
+    rings.forEach(ring => {
+        const r = ring.radius;
+        const total = ring.count;
+        const startIdx = ring.start;
+
+        for (let i = 0; i < total; i++) {
+            const angle = (i / total) * 360 - 90 + (startIdx * 2.5); // смещение, чтобы не накладывались
+            const rad = angle * Math.PI / 180;
+            const x = 50 + r * Math.cos(rad);
+            const y = 50 + r * Math.sin(rad);
+
+            const item = document.createElement('div');
+            item.className = 'ray-item';
+            item.style.pointerEvents = 'none';
+
+            // Линия
+            const line = document.createElement('div');
+            line.className = 'ray-line';
+            const dist = Math.sqrt(Math.pow(x - 50, 2) + Math.pow(y - 50, 2));
+            line.style.width = dist + '%';
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.transformOrigin = 'left center';
+            line.style.position = 'absolute';
+            line.style.top = '50%';
+            line.style.left = '50%';
+            line.style.opacity = '0';
+            // Анимация появления
+            setTimeout(() => {
+                line.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                line.style.opacity = '1';
+            }, 10 + globalIndex * 8);
+
+            // Кнопка
+            const btn = document.createElement('button');
+            btn.className = 'ray-btn';
+            btn.textContent = globalIndex + 1;
+            btn.style.left = x + '%';
+            btn.style.top = y + '%';
+            btn.dataset.index = globalIndex;
+
+            // Анимация появления кнопок
+            btn.style.opacity = '0';
+            setTimeout(() => {
+                btn.style.transition = 'opacity 0.5s ease, transform 0.3s ease';
+                btn.style.opacity = '1';
+            }, 50 + globalIndex * 10);
+
+            item.appendChild(line);
+            item.appendChild(btn);
+            container.appendChild(item);
+
+            // Клик по кнопке
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const idx = parseInt(this.dataset.index);
+                showReason(idx);
+                createSparkles(e);
+                if (navigator.vibrate) navigator.vibrate(15);
+            });
+
+            globalIndex++;
+        }
+    });
+
+    // ============================================================
+    // 3. ЛОГИКА ПОПАПА
+    // ============================================================
+    const popup = document.getElementById('reasonPopup');
+    const popupText = document.getElementById('popupText');
+    const reasonNum = document.getElementById('reasonNum');
+    const closeBtn = document.getElementById('closePopup');
+    let currentTimeout = null;
+
+    function showReason(index) {
+        if (currentTimeout) clearTimeout(currentTimeout);
+        const text = reasons[index] || "Ты просто совершенство!";
+        popupText.textContent = text;
+        reasonNum.textContent = index + 1;
+        popup.classList.add('active');
+
+        // Сердце "ударяет"
+        const heart = document.getElementById('mainHeart');
+        heart.style.animation = 'none';
+        heart.style.transform = 'scale(1.3)';
+        heart.style.filter = 'drop-shadow(0 0 100px rgba(255,50,100,1))';
+        setTimeout(() => {
+            heart.style.animation = 'float 3s ease-in-out infinite, pulseGlow 2s ease-in-out infinite';
+            heart.style.transform = '';
+            heart.style.filter = '';
+        }, 400);
+
+        currentTimeout = setTimeout(() => {
+            popup.classList.remove('active');
+        }, 8000);
+    }
+
+    closeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        popup.classList.remove('active');
+        if (currentTimeout) clearTimeout(currentTimeout);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (popup.classList.contains('active')) {
+            if (!popup.contains(e.target) && !e.target.classList.contains('ray-btn') && !e.target.classList.contains('heart-3d')) {
+                popup.classList.remove('active');
+                if (currentTimeout) clearTimeout(currentTimeout);
+            }
+        }
+    });
+
+    // Клик по сердцу — случайная причина
+    document.getElementById('mainHeart').addEventListener('click', function(e) {
+        const randomIdx = Math.floor(Math.random() * reasons.length);
+        showReason(randomIdx);
+        createSparkles(e);
+        if (navigator.vibrate) navigator.vibrate(30);
+    });
+
+    // ============================================================
+    // 4. ИСКРЫ
+    // ============================================================
+    function createSparkles(e) {
+        const countSpark = 30;
+        const colors = ['#ffb6c1', '#ff3b6f', '#ff85a1', '#fff', '#ffd700', '#ff6b8a'];
+        for (let i = 0; i < countSpark; i++) {
+            const spark = document.createElement('div');
+            spark.className = 'sparkle';
+            const size = Math.random() * 10 + 4;
+            spark.style.width = size + 'px';
+            spark.style.height = size + 'px';
+            spark.style.left = (e.clientX || window.innerWidth/2) + 'px';
+            spark.style.top = (e.clientY || window.innerHeight/2) + 'px';
+            spark.style.background = colors[Math.floor(Math.random() * colors.length)];
+            document.body.appendChild(spark);
+
+            const angle = Math.random() * 360;
+            const dist = Math.random() * 180 + 50;
+            const dx = Math.cos(angle) * dist;
+            const dy = Math.sin(angle) * dist - 60;
+
+            spark.animate([
+                { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                { transform: `translate(${dx}px, ${dy}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 800 + Math.random() * 500,
+                easing: 'cubic-bezier(0.2, 0.9, 0.3, 1)',
+                fill: 'forwards'
+            }).onfinish = () => spark.remove();
+        }
+    }
+
+    // ============================================================
+    // 5. 8-БИТНАЯ РОМАНТИЧНАЯ МУЗЫКА (встроенная)
+    // ============================================================
+    // Создаём аудио контекст и генерируем мелодию вальса
+    let audioCtx = null;
+    let isPlaying = false;
+    let musicInterval = null;
+    const musicToggle = document.getElementById('musicToggle');
+
+    function initAudio() {
+        if (audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    // Ноты для романтичного 8-битного вальса (частота в Гц)
+    // Простая последовательность: До-Ми-Соль-Ля-Си...
+    const notes = [
+        523.25, 659.25, 783.99, 880.00, 987.77, 1046.50,
+        587.33, 739.99, 880.00, 987.77, 1174.66, 1318.51,
+        523.25, 659.25, 783.99, 1046.50, 1174.66, 1318.51,
+        493.88, 587.33, 739.99, 880.00, 1046.50, 1174.66
+    ];
+    // Длительности (в мс)
+    const durations = [300, 150, 300, 150, 300, 450, 300, 150, 300, 150, 300, 450];
+
+    let noteIndex = 0;
+
+    function playNextNote() {
+        if (!audioCtx || !isPlaying) return;
+
+        const freq = notes[noteIndex % notes.length];
+        const duration = durations[noteIndex % durations.length] * 0.8;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'square'; // 8-битный звук
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration / 1000);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration / 1000);
+
+        // Добавляем вторую гармонию для объёма (пикколо)
+        if (noteIndex % 2 === 0) {
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(freq * 1.5, audioCtx.currentTime);
+            gain2.gain.setValueAtTime(0.015, audioCtx.currentTime);
+            gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration / 1000);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.start();
+            osc2.stop(audioCtx.currentTime + duration / 1000);
+        }
+
+        noteIndex++;
+        // Пауза между нотами
+        const delay = duration * 1.1 + 50;
+        if (isPlaying) {
+            musicInterval = setTimeout(playNextNote, delay);
+        }
+    }
+
+    function toggleMusic() {
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        if (!audioCtx) {
+            initAudio();
+            audioCtx.resume();
+        }
+
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+            musicToggle.textContent = '🎵';
+            musicToggle.classList.add('playing');
+            noteIndex = 0;
+            // Небольшая задержка перед стартом
+            setTimeout(playNextNote, 300);
+        } else {
+            musicToggle.textContent = '🔇';
+            musicToggle.classList.remove('playing');
+            if (musicInterval) {
+                clearTimeout(musicInterval);
+                musicInterval = null;
+            }
+        }
+    }
+
+    musicToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMusic();
+    });
+
+    // Автозапуск музыки при первом касании экрана (политика iPhone)
+    document.addEventListener('touchstart', function firstTouch() {
+        if (!audioCtx) {
+            initAudio();
+            audioCtx.resume().then(() => {
+                // Включаем музыку после первого касания
+                if (!isPlaying) {
+                    isPlaying = true;
+                    musicToggle.textContent = '🎵';
+                    musicToggle.classList.add('playing');
+                    noteIndex = 0;
+                    setTimeout(playNextNote, 200);
+                }
+            }).catch(() => {});
+        }
+        document.removeEventListener('touchstart', firstTouch);
+    }, { once: true });
+
+    // Также на случай, если открыли на компе
+    document.addEventListener('click', function firstClick() {
+        if (!audioCtx) {
+            initAudio();
+            audioCtx.resume().then(() => {
+                if (!isPlaying) {
+                    isPlaying = true;
+                    musicToggle.textContent = '🎵';
+                    musicToggle.classList.add('playing');
+                    noteIndex = 0;
+                    setTimeout(playNextNote, 200);
+                }
+            }).catch(() => {});
+        }
+        document.removeEventListener('click', firstClick);
+    }, { once: true });
+
+    console.log('❤️ 57 причин для любимой загружены!');
+</script>
+</body>
+</html>
